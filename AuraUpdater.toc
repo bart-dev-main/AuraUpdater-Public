@@ -1,0 +1,22 @@
+## Interface: 100207, 110000, 110002
+## Version: 1
+## Title: Aura Updater
+## Author: Naemesis
+## IconTexture: Interface\AddOns\AuraUpdater\Media\Textures\logo_secondary.blp
+## SavedVariables: LiquidUpdaterSaved
+## OptionalDeps: ViragDevTool, WeakAuras
+
+embeds.xml
+
+GlobalSettings.lua
+WeakAuras.lua
+WeakAurasImporter.lua
+Utility.lua
+
+Interface/Window.lua
+Interface/Interface.lua
+Interface/AuraImportElement.lua
+Interface/AuraUpdater.lua
+Interface/AuraChecker.lua
+
+AuraUpdater.lua
