@@ -1,0 +1,4 @@
+Libs/*
+!Libs/LibDeflate
+WeakAuras
+WeakAuras.lua
