@@ -143,6 +143,8 @@ end
 
 -- Save the size/position of a frame in SavedVariables, keyed by some name
 function LUP:SaveSize(frame, name)
+    if not name then return end
+
     if not LiquidUpdaterSaved.settings.frames[name] then
         LiquidUpdaterSaved.settings.frames[name] = {}
     end
@@ -154,6 +156,8 @@ function LUP:SaveSize(frame, name)
 end
 
 function LUP:SavePosition(frame, name)
+    if not name then return end
+
     if not LiquidUpdaterSaved.settings.frames[name] then
         LiquidUpdaterSaved.settings.frames[name] = {}
     end
@@ -181,6 +185,8 @@ end
 
 -- Restore and apply saved size/position to a frame, keyed by some name
 function LUP:RestoreSize(frame, name)
+    if not name then return end
+
     local settings = LiquidUpdaterSaved.settings.frames[name]
 
     if not settings then return end
@@ -191,6 +197,8 @@ function LUP:RestoreSize(frame, name)
 end
 
 function LUP:RestorePosition(frame, name)
+    if not name then return end
+    
     local settings = LiquidUpdaterSaved.settings.frames[name]
 
     if not (settings and settings.points) then return end
@@ -207,27 +215,35 @@ function LUP:AddBorder(parent, thickness, horizontalOffset, verticalOffset)
     if not verticalOffset then verticalOffset = 0 end
     
     parent.border = {
-        top = parent:CreateTexture(nil, "BORDER"),
-        bottom = parent:CreateTexture(nil, "BORDER"),
-        left = parent:CreateTexture(nil, "BORDER"),
-        right = parent:CreateTexture(nil, "BORDER"),
+        top = parent:CreateTexture(nil, "OVERLAY"),
+        bottom = parent:CreateTexture(nil, "OVERLAY"),
+        left = parent:CreateTexture(nil, "OVERLAY"),
+        right = parent:CreateTexture(nil, "OVERLAY"),
     }
 
     parent.border.top:SetHeight(thickness)
     parent.border.top:SetPoint("TOPLEFT", parent, "TOPLEFT", -horizontalOffset, verticalOffset)
     parent.border.top:SetPoint("TOPRIGHT", parent, "TOPRIGHT", horizontalOffset, verticalOffset)
+    parent.border.top:SetSnapToPixelGrid(false)
+    parent.border.top:SetTexelSnappingBias(0)
 
     parent.border.bottom:SetHeight(thickness)
     parent.border.bottom:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", -horizontalOffset, -verticalOffset)
     parent.border.bottom:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", horizontalOffset, -verticalOffset)
+    parent.border.bottom:SetSnapToPixelGrid(false)
+    parent.border.bottom:SetTexelSnappingBias(0)
 
     parent.border.left:SetWidth(thickness)
     parent.border.left:SetPoint("TOPLEFT", parent, "TOPLEFT", -horizontalOffset, verticalOffset)
     parent.border.left:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", -horizontalOffset, -verticalOffset)
+    parent.border.left:SetSnapToPixelGrid(false)
+    parent.border.left:SetTexelSnappingBias(0)
 
     parent.border.right:SetWidth(thickness)
     parent.border.right:SetPoint("TOPRIGHT", parent, "TOPRIGHT", horizontalOffset, verticalOffset)
     parent.border.right:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", horizontalOffset, -verticalOffset)
+    parent.border.right:SetSnapToPixelGrid(false)
+    parent.border.right:SetTexelSnappingBias(0)
 
     function parent:SetBorderColor(r, g, b)
         for _, tex in pairs(parent.border) do
@@ -258,6 +274,52 @@ function LUP:AddBorder(parent, thickness, horizontalOffset, verticalOffset)
     parent:SetBorderColor(0, 0, 0)
 end
 
+-- Adds a highlight to a frame, displayed when the cursor hovers over it
+-- If an alt frame is provided, the highlight will show on the alt frame when the cursor is hovered over the main frame
+function LUP:AddHoverHighlight(frame, altFrame, width, r, g, b, a)
+    if not altFrame then altFrame = frame end
+
+    if not frame.highlight then
+        frame.highlight = {
+            top = frame:CreateTexture(nil, "HIGHLIGHT"),
+            left = frame:CreateTexture(nil, "HIGHLIGHT"),
+            bottom = frame:CreateTexture(nil, "HIGHLIGHT"),
+            right = frame:CreateTexture(nil, "HIGHLIGHT")
+        }
+        
+        frame.highlight.top:SetPoint("TOPLEFT", altFrame, "TOPLEFT", 1, -1)
+        frame.highlight.top:SetPoint("TOPRIGHT", altFrame, "TOPRIGHT", -1, -1)
+        frame.highlight.top:SetHeight(width or 1)
+
+        frame.highlight.bottom:SetPoint("BOTTOMLEFT", altFrame, "BOTTOMLEFT", 1, 1)
+        frame.highlight.bottom:SetPoint("BOTTOMRIGHT", altFrame, "BOTTOMRIGHT", -1, 1)
+        frame.highlight.bottom:SetHeight(width or 1)
+
+        frame.highlight.left:SetPoint("TOPLEFT", frame.highlight.top, "BOTTOMLEFT")
+        frame.highlight.left:SetPoint("BOTTOMLEFT", frame.highlight.bottom, "TOPLEFT")
+        frame.highlight.left:SetWidth(width or 1)
+
+        frame.highlight.right:SetPoint("TOPRIGHT", frame.highlight.top, "BOTTOMRIGHT")
+        frame.highlight.right:SetPoint("BOTTOMRIGHT", frame.highlight.bottom, "TOPRIGHT")
+        frame.highlight.right:SetWidth(width or 1)
+    end
+
+    for _, tex in pairs(frame.highlight) do
+        tex:SetColorTexture(r or (56/255), g or (119/255), b or (245/255), a or 0.6)
+    end
+end
+
 function LUP:ErrorPrint(text)
     print(string.format("AuraUpdater |cffff0000ERROR|r: %s", text))
+end
+
+function LUP:ClassColorName(unit)
+    if not UnitExists(unit) then return unit end
+    
+    local name = UnitNameUnmodified(unit)
+    local class = UnitClassBase(unit)
+
+    local colorStr = RAID_CLASS_COLORS[class].colorStr
+    
+    return string.format("|c%s%s|r", colorStr, name)
 end

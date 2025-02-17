@@ -1,23 +1,39 @@
-local addOnName, LUP = ...
+local _, LUP = ...
 
 -- Tooltip
 CreateFrame("GameTooltip", "LRTooltip", UIParent, "GameTooltipTemplate")
 
 LUP.Tooltip = _G["LRTooltip"]
-LUP.Tooltip.TextLeft1:SetFont(LUP.gs.visual.font, 13)
+LUP.Tooltip.TextLeft1:SetFontObject(AUFont13)
 
 -- Main window
-local windowWidth = 600
+local windowWidth = 640
 local windowHeight = 400
 
-function LUP:InitializeInterface()
-    local screenWidth, screenHeight = GetPhysicalScreenSize()
+local updateButton, auraCheckButton, otherCheckButton
 
+local function ResizeHeaderButtons(_, buttonFrameWidth)
+    local combinedButtonWidth = buttonFrameWidth - 16
+
+    updateButton:SetWidth(combinedButtonWidth / 3)
+    auraCheckButton:SetWidth(combinedButtonWidth / 3)
+end
+
+function LUP:InitializeInterface()
     -- Window
     LUP.window = LUP:CreateWindow("Main", true, true, true)
     LUP.window:SetFrameStrata("HIGH")
-    LUP.window:SetResizeBounds(windowWidth, windowHeight) -- Height is set based on timeine data
+    LUP.window:SetResizeBounds(windowWidth, windowHeight)
+    LUP.window:SetPoint("CENTER")
     LUP.window:Hide()
+
+    LUP.window:AddButton(
+        "Interface\\Addons\\AuraUpdater\\Media\\Textures\\Cogwheel.tga",
+        "Settings",
+        function()
+            LUP.settingsWindow:SetShown(not LUP.settingsWindow:IsShown())
+        end
+    )
 
     -- Button frame
     local buttonFrame = CreateFrame("Frame", nil, LUP.window)
@@ -26,12 +42,13 @@ function LUP:InitializeInterface()
     buttonFrame:SetPoint("TOPRIGHT", LUP.window.moverFrame, "BOTTOMRIGHT")
 
     buttonFrame:SetHeight(32)
+    buttonFrame:SetScript("OnSizeChanged", ResizeHeaderButtons)
 
     -- Update button
-    local updateButton = CreateFrame("Frame", nil, LUP.window)
+    updateButton = CreateFrame("Frame", nil, LUP.window)
 
     updateButton:SetPoint("TOPLEFT", buttonFrame, "TOPLEFT", 4, -4)
-    updateButton:SetPoint("BOTTOMRIGHT", buttonFrame, "BOTTOM", -2, 0)
+    updateButton:SetPoint("BOTTOMLEFT", buttonFrame, "BOTTOMLEFT", 4, 0)
     updateButton:EnableMouse(true)
 
     updateButton.highlight = updateButton:CreateTexture(nil, "HIGHLIGHT")
@@ -39,7 +56,7 @@ function LUP:InitializeInterface()
     updateButton.highlight:SetAllPoints()
 
     updateButton.text = updateButton:CreateFontString(nil, "OVERLAY")
-    updateButton.text:SetFont(LUP.gs.visual.font, 17, LUP.gs.visual.fontFlags)
+    updateButton.text:SetFontObject(AUFont17)
     updateButton.text:SetPoint("CENTER", updateButton, "CENTER")
     updateButton.text:SetText(string.format("|cff%sUpdate|r", LUP.gs.visual.colorStrings.white))
 
@@ -47,7 +64,8 @@ function LUP:InitializeInterface()
         "OnMouseDown",
         function()
             LUP.updateWindow:Show()
-            LUP.checkWindow:Hide()
+            LUP.auraCheckWindow:Hide()
+            LUP.otherCheckWindow:Hide()
         end
     )
 
@@ -55,52 +73,96 @@ function LUP:InitializeInterface()
     LUP:AddBorder(updateButton)
     updateButton:SetBorderColor(borderColor.r, borderColor.g, borderColor.b)
 
-    -- Check button
-    local checkButton = CreateFrame("Frame", nil, LUP.window)
+    -- Aura check button
+    auraCheckButton = CreateFrame("Frame", nil, LUP.window)
 
-    checkButton:SetPoint("TOPRIGHT", buttonFrame, "TOPRIGHT", -4, -4)
-    checkButton:SetPoint("BOTTOMLEFT", buttonFrame, "BOTTOM", 2, 0)
-    checkButton:EnableMouse(true)
+    auraCheckButton:SetPoint("TOPLEFT", updateButton, "TOPRIGHT", 4, 0)
+    auraCheckButton:SetPoint("BOTTOMLEFT", updateButton, "BOTTOMRIGHT", 4, 0)
+    auraCheckButton:EnableMouse(true)
 
-    checkButton.highlight = checkButton:CreateTexture(nil, "HIGHLIGHT")
-    checkButton.highlight:SetColorTexture(1, 1, 1, 0.05)
-    checkButton.highlight:SetAllPoints()
+    auraCheckButton.highlight = auraCheckButton:CreateTexture(nil, "HIGHLIGHT")
+    auraCheckButton.highlight:SetColorTexture(1, 1, 1, 0.05)
+    auraCheckButton.highlight:SetAllPoints()
 
-    checkButton.text = checkButton:CreateFontString(nil, "OVERLAY")
-    checkButton.text:SetFont(LUP.gs.visual.font, 17, LUP.gs.visual.fontFlags)
-    checkButton.text:SetPoint("CENTER", checkButton, "CENTER")
-    checkButton.text:SetText(string.format("|cff%sCheck|r", LUP.gs.visual.colorStrings.white))
+    auraCheckButton.text = auraCheckButton:CreateFontString(nil, "OVERLAY")
+    auraCheckButton.text:SetFontObject(AUFont17)
+    auraCheckButton.text:SetPoint("CENTER", auraCheckButton, "CENTER")
+    auraCheckButton.text:SetText(string.format("|cff%sAura check|r", LUP.gs.visual.colorStrings.white))
 
-    checkButton:SetScript(
+    auraCheckButton:SetScript(
         "OnMouseDown",
         function()
             LUP.updateWindow:Hide()
-            LUP.checkWindow:Show()
+            LUP.auraCheckWindow:Show()
+            LUP.otherCheckWindow:Hide()
         end
     )
 
-    LUP:AddBorder(checkButton)
-    checkButton:SetBorderColor(borderColor.r, borderColor.g, borderColor.b)
+    LUP:AddBorder(auraCheckButton)
+    auraCheckButton:SetBorderColor(borderColor.r, borderColor.g, borderColor.b)
+
+    -- Other check button
+    otherCheckButton = CreateFrame("Frame", nil, LUP.window)
+
+    otherCheckButton:SetPoint("TOPLEFT", auraCheckButton, "TOPRIGHT", 4, 0)
+    otherCheckButton:SetPoint("BOTTOMRIGHT", buttonFrame, "BOTTOMRIGHT", -4, 0)
+    otherCheckButton:EnableMouse(true)
+
+    otherCheckButton.highlight = otherCheckButton:CreateTexture(nil, "HIGHLIGHT")
+    otherCheckButton.highlight:SetColorTexture(1, 1, 1, 0.05)
+    otherCheckButton.highlight:SetAllPoints()
+
+    otherCheckButton.text = otherCheckButton:CreateFontString(nil, "OVERLAY")
+    otherCheckButton.text:SetFontObject(AUFont17)
+    otherCheckButton.text:SetPoint("CENTER", otherCheckButton, "CENTER")
+    otherCheckButton.text:SetText(string.format("|cff%sOther check|r", LUP.gs.visual.colorStrings.white))
+
+    otherCheckButton:SetScript(
+        "OnMouseDown",
+        function()
+            LUP.updateWindow:Hide()
+            LUP.auraCheckWindow:Hide()
+            LUP.otherCheckWindow:Show()
+        end
+    )
+
+    LUP:AddBorder(otherCheckButton)
+    otherCheckButton:SetBorderColor(borderColor.r, borderColor.g, borderColor.b)
 
     -- Sub windows
     LUP.updateWindow = CreateFrame("Frame", nil, LUP.window)
     LUP.updateWindow:SetPoint("TOPLEFT", buttonFrame, "BOTTOMLEFT")
     LUP.updateWindow:SetPoint("BOTTOMRIGHT", LUP.window, "BOTTOMRIGHT")
 
-    LUP.checkWindow = CreateFrame("Frame", nil, LUP.window)
-    LUP.checkWindow:SetPoint("TOPLEFT", buttonFrame, "BOTTOMLEFT")
-    LUP.checkWindow:SetPoint("BOTTOMRIGHT", LUP.window, "BOTTOMRIGHT")
+    LUP.auraCheckWindow = CreateFrame("Frame", nil, LUP.window)
+    LUP.auraCheckWindow:SetPoint("TOPLEFT", buttonFrame, "BOTTOMLEFT")
+    LUP.auraCheckWindow:SetPoint("BOTTOMRIGHT", LUP.window, "BOTTOMRIGHT")
 
-    LUP.checkWindow:Hide()
+    LUP.otherCheckWindow = CreateFrame("Frame", nil, LUP.window)
+    LUP.otherCheckWindow:SetPoint("TOPLEFT", buttonFrame, "BOTTOMLEFT")
+    LUP.otherCheckWindow:SetPoint("BOTTOMRIGHT", LUP.window, "BOTTOMRIGHT")
 
-    -- If there's no saved position/size settings for the main window yet, apply some default values
-    local windowSettings = LiquidUpdaterSaved.settings.frames["Main"]
+    LUP.auraCheckWindow:Hide()
+    LUP.otherCheckWindow:Hide()
 
-    if not windowSettings or not windowSettings.points then
-        LUP.window:SetPoint("TOPLEFT", UIParent, "TOPLEFT", (screenWidth - windowWidth) / 2, -(screenHeight - windowHeight) / 2)
-    end
+    LUP.window:SetSize(windowWidth, windowHeight)
 
-    if not windowSettings or not windowSettings.width then
-        LUP.window:SetSize(windowWidth, windowHeight)
-    end
+    LUP:InitializePopupWindow()
+    LUP:InitializeSettings()
+
+    -- When escape is pressed, cclose the main window
+    LUP.window:SetScript(
+        "OnKeyDown",
+        function(_, key)
+            if InCombatLockdown() then return end
+
+            if key == "ESCAPE" then
+                LUP.window:SetPropagateKeyboardInput(false)
+
+                LUP.window:Hide()
+            else
+                LUP.window:SetPropagateKeyboardInput(true)
+            end
+        end
+    )
 end

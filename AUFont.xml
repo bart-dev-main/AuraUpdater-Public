@@ -1,0 +1,91 @@
+<Ui>
+	<FontFamily name="AUFont13" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\PTSansNarrow.ttf" height="13" outline=""/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Fonts\2002.ttf" height="13" outline=""/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Fonts\ARKai_C.ttf" height="13" outline=""/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\arheiuhk_bd.ttf" height="13" outline=""/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Fonts\FRIZQT___CYR.ttf" height="13" outline=""/>
+		</Member>
+	</FontFamily>
+
+	<FontFamily name="AUFont15" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\PTSansNarrow.ttf" height="15" outline=""/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Fonts\2002.ttf" height="15" outline=""/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Fonts\ARKai_C.ttf" height="15" outline=""/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\arheiuhk_bd.ttf" height="15" outline=""/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Fonts\FRIZQT___CYR.ttf" height="15" outline=""/>
+		</Member>
+	</FontFamily>
+
+	<FontFamily name="AUFont16" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\PTSansNarrow.ttf" height="16" outline=""/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Fonts\2002.ttf" height="16" outline=""/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Fonts\ARKai_C.ttf" height="16" outline=""/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\arheiuhk_bd.ttf" height="16" outline=""/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Fonts\FRIZQT___CYR.ttf" height="16" outline=""/>
+		</Member>
+	</FontFamily>
+
+	<FontFamily name="AUFont17" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\PTSansNarrow.ttf" height="17" outline=""/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Fonts\2002.ttf" height="17" outline=""/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Fonts\ARKai_C.ttf" height="17" outline=""/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\arheiuhk_bd.ttf" height="17" outline=""/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Fonts\FRIZQT___CYR.ttf" height="17" outline=""/>
+		</Member>
+	</FontFamily>
+
+	<FontFamily name="AUFont21" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\PTSansNarrow.ttf" height="21" outline=""/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Fonts\2002.ttf" height="21" outline=""/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Fonts\ARKai_C.ttf" height="21" outline=""/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\AuraUpdater\Media\Fonts\arheiuhk_bd.ttf" height="21" outline=""/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Fonts\FRIZQT___CYR.ttf" height="21" outline=""/>
+		</Member>
+	</FontFamily>
+</Ui>
